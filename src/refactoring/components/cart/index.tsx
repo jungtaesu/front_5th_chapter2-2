@@ -7,7 +7,6 @@ interface Props {
 }
 
 export const CartPage = ({ products, coupons }: Props) => {
-
   const {
     cart,
     addToCart,
@@ -24,15 +23,10 @@ export const CartPage = ({ products, coupons }: Props) => {
 
   const getRemainingStock = (product: Product) => {
     const cartItem = cart.find(item => item.product.id === product.id);
-    // console.log("장바구니 아이템", cartItem);
     return product.stock - (cartItem?.quantity || 0);
   };
 
   const { totalBeforeDiscount, totalAfterDiscount, totalDiscount } = calculateTotal()
-
-  console.log("장바구니 총 금액", totalBeforeDiscount);
-  console.log("장바구니 할인 금액", totalDiscount);
-  console.log("장바구니 최종 금액", totalAfterDiscount);
 
   const getAppliedDiscount = (item: CartItem) => {
     const { discounts } = item.product;
