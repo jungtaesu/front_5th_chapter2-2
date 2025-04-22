@@ -1,5 +1,6 @@
 import { CartItem, Coupon } from "../../types";
-
+//솔직히 없어져도 됨. cart.ts는 entities에 들어가야함. 테스트 코드떔에 남아있다.
+//계산
 export const calculateItemTotal = (item: CartItem) => {
   const { quantity, product } = item;
   console.log("상품명", product.name);

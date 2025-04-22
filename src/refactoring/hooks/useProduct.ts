@@ -1,31 +1,50 @@
 import { useState } from "react";
 import { Product } from "../../types.ts";
-import { initialProducts } from "../../constants/index.ts";
 
 export const useProducts = (initialProducts: Product[]) => {
   const [products, setProducts] = useState<Product[]>(initialProducts);
-  
+  const [openProductIds, setOpenProductIds] = useState<Set<string>>(new Set());
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+
   const addProduct = (newProduct: Product) => {
-    const list = [...initialProducts, newProduct];
-    setProducts(list);
+    setProducts((prev) => [...prev, newProduct]);
   }
 
   const updateProduct = (updatedProduct: Product) => {
+    //update할때 모든 아이디에 문자열 a 추가
+    setProducts((prev) => {
 
-    console.log("업데이트된 상품", updatedProduct);
+      //같은 id이면 업데이트된것만 포함되어야해.
+      const updatedProducts = prev.filter(product => product.id !== updatedProduct.id);
+      return [...updatedProducts, updatedProduct];
 
-    const updatedList = initialProducts.map(product => {
-      if (product.id === updatedProduct.id) {
-        return { ...product, ...updatedProduct };
-      }
-      return product;
-    })
-    setProducts(updatedList);
+    });
   }
+
+  const toggleProductAccordion = (productId: string) => {
+    setOpenProductIds(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(productId)) {
+        newSet.delete(productId);
+      } else {
+        newSet.add(productId);
+      }
+      return newSet;
+    });
+  };
+
+  const handleEditProduct = (product: Product) => {
+    setEditingProduct({...product});
+  };
+
 
   return {
     products: products,
     updateProduct,
-    addProduct
+    addProduct,
+    toggleProductAccordion,
+    handleEditProduct,
+    openProductIds,
+    editingProduct,
   };
 };
