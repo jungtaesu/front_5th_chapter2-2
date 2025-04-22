@@ -334,7 +334,7 @@ describe("basic > ", () => {
       act(() => {
         result.current.addCoupon(newCoupon);
       });
-
+      console.log("result.current.coupons", result.current.coupons);
       expect(result.current.coupons).toHaveLength(3);
       expect(result.current.coupons[2]).toEqual(newCoupon);
     });

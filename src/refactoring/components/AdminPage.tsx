@@ -63,6 +63,7 @@ export const AdminPage = ({ products, coupons, onProductUpdate, onProductAdd, on
   // 수정 완료 핸들러 함수 추가
   const handleEditComplete = () => {
     if (editingProduct) {
+      console.log("수정 완료", editingProduct);
       onProductUpdate(editingProduct);
       setEditingProduct(null);
     }

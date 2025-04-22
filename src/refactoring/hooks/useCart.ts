@@ -33,15 +33,7 @@ export const useCart = () => {
   };
 
   const updateQuantity = (productId: string, newQuantity: number) => {
-    const updatedCart = cart.map(item => {
-      if(item.product.id === productId) {
-        return {...item, quantity: newQuantity};
-      } else {
-        return item;
-      }
-    })
-    setCart(updatedCart);
-    // console.log("장바구니 업데이트", updatedCart);
+    setCart((prev) => updateCartItemQuantity(prev, productId, newQuantity)) 
   };
 
   const applyCoupon = (coupon: Coupon) => {
@@ -49,11 +41,8 @@ export const useCart = () => {
   };
 
   const calculateTotal = () => {
-
     const result = calculateCartTotal(cart, selectedCoupon);
-
     return result;
-
   };
 
   return {
