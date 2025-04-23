@@ -1,6 +1,6 @@
 import { Product } from "../../../../types";
-import AddProduct from "./AddProduct";
-import ProductList from "./ProductList";
+import AddProduct from "./add-product";
+import ProductList from "./product-list";
 
 interface Props {
     products: Product[];

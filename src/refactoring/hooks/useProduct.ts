@@ -3,7 +3,6 @@ import { Product } from "../../types.ts";
 
 export const useProducts = (initialProducts: Product[]) => {
   const [products, setProducts] = useState<Product[]>(initialProducts);
-  const [openProductIds, setOpenProductIds] = useState<Set<string>>(new Set());
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
 
   const addProduct = (newProduct: Product) => {
@@ -21,18 +20,6 @@ export const useProducts = (initialProducts: Product[]) => {
     });
   }
 
-  const toggleProductAccordion = (productId: string) => {
-    setOpenProductIds(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(productId)) {
-        newSet.delete(productId);
-      } else {
-        newSet.add(productId);
-      }
-      return newSet;
-    });
-  };
-
   const handleEditProduct = (product: Product) => {
     setEditingProduct({...product});
   };
@@ -42,9 +29,9 @@ export const useProducts = (initialProducts: Product[]) => {
     products: products,
     updateProduct,
     addProduct,
-    toggleProductAccordion,
+    // toggleProductAccordion,
     handleEditProduct,
-    openProductIds,
+    // openProductIds,
     editingProduct,
   };
 };

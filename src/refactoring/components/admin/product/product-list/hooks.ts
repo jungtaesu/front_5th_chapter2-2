@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Discount, Product } from "../../../../../types";
-import { FieldValidator } from "../../../../entities/product/index";
+import { FieldValidator } from "../../../../../types";
 
 type Props = {
     products: Product[];

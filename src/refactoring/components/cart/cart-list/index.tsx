@@ -1,5 +1,6 @@
 import { CartItem } from "../../../../types";
 import { getAppliedDiscount } from "../../../entities/cart";
+import { useLocalStorageContext } from "../../../context";
 type Props ={
     cart: CartItem[];
     removeFromCart: (productId: string) => void;
@@ -7,15 +8,18 @@ type Props ={
 }
 
 const CartList = ({ cart, removeFromCart, updateQuantity }:Props) => {
+    const { localCart } = useLocalStorageContext();
+
+    const displayCart = localCart.length > 0 ? localCart : cart;
 
     return (
         <div className="space-y-2">
-            {cart.map(item => {
+            {displayCart.map(item => {
               const appliedDiscount = getAppliedDiscount(item);
               return (
                 <div key={item.product.id} className="flex justify-between items-center bg-white p-3 rounded shadow">
                   <div>
-                    <span className="font-semibold">{item.product.name}</span>
+                    <span className="font-semibold">{item.product.name + '수정불가'}</span>
                     <br/>
                     <span className="text-sm text-gray-600">
                   {item.product.price}원 x {item.quantity}
