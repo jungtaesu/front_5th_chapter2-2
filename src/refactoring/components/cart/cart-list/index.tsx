@@ -19,7 +19,7 @@ const CartList = ({ cart, removeFromCart, updateQuantity }:Props) => {
               return (
                 <div key={item.product.id} className="flex justify-between items-center bg-white p-3 rounded shadow">
                   <div>
-                    <span className="font-semibold">{item.product.name + '수정불가'}</span>
+                    <span className="font-semibold">{item.product.name}</span>
                     <br/>
                     <span className="text-sm text-gray-600">
                   {item.product.price}원 x {item.quantity}

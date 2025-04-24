@@ -24,8 +24,8 @@ const OrderSummary = ({ totalAfterDiscount, totalBeforeDiscount, totalDiscount, 
                     최종 결제 금액: {totalAfterDiscount.toLocaleString()}원
                 </p>
                 <div className="flex  mt-4">
-                    <div id="local-save" onClick={() => setValue(cart)}>저장</div>
-                    <div data-testid="local-remove" onClick={removeValue} className="ml-4">삭제</div>
+                    <div className="bg-blue-500" id="local-save" onClick={() => setValue(cart)}>저장</div>
+                    <div className="ml-4 bg-red-500" data-testid="local-remove" onClick={removeValue}>삭제</div>
                 </div>
             </div>
 

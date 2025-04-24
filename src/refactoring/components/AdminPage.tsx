@@ -1,7 +1,6 @@
-import { Coupon, Discount, Product } from '../../types.ts';
+import { Coupon, Product } from '../../types.ts';
 import ProductAdmin from './admin/product/index.tsx';
 import CouponAdmin from './admin/coupon/index.tsx';
-import CartList from './cart/cart-list/index.tsx';
 
 interface Props {
   products: Product[];
