@@ -83,17 +83,16 @@ ex) for문은 forEach나 map 으로.
 1번 변수가 문제인지 2번 변수가 문제인지 둘다 확인해야 합니다 -> 유지보수성, 테스트 용이성
 함수가 단일책임이 아니기 때문에 해당 함수에서 어떤 책임을 가지고 있는지 불분명하고, 확장성 또한 매우 낮습니다.
 
-현재 CartPage.tsx는 대략 모습이 이렇습니다.
+현재 수정한 CartPage.tsx는 대략 모습이 이렇습니다.
 
-cosnt CartPage = () => {
-    //변수
-    return (
-          <ItemList addToCart={addToCart} cart={cart} products={products} />
-          <CartList removeFromCart={removeFromCart} updateQuantity={updateQuantity} cart={cart} />
-          <UsingCoupon coupons={coupons} selectedCoupon={selectedCoupon} applyCoupon={applyCoupon} />
-          <OrderSummary totalBeforeDiscount={totalBeforeDiscount} totalAfterDiscount={totalAfterDiscount} totalDiscount={totalDiscount} />
-    )
-}
+    const CartPage = () => {
+        return (
+            <ItemList addToCart={addToCart} cart={cart} products={products} />
+            <CartList removeFromCart={removeFromCart} updateQuantity={updateQuantity} cart={cart} />
+            <UsingCoupon coupons={coupons} selectedCoupon={selectedCoupon} applyCoupon={applyCoupon} />
+            <OrderSummary totalBeforeDiscount={totalBeforeDiscount} totalAfterDiscount={totalAfterDiscount} totalDiscount={totalDiscount} />
+        )
+    }
 
 어떻게 이렇게 만들었는지 한번 복기해보겠습니다.
 
@@ -101,7 +100,7 @@ CartPage를 기준으로 보면 cart 폴더와 coupon 폴더로만 나눴습니�
 순수함수와 액션함수를 나눠야한다는 생각이 있었는데
 hooks 폴더안에 hook 관련한 함수를 전부 넣었습니다. (데이터를 변경하는 액션 함수) hooks/useCart.ts에서 선언한 훅은 CartPage.tsx에서 한번만 호출하면 데이터 일관성을 유지하고
 CartPage의 다른곳에서 쓰는 데이터는 props로 넘겨주었습니다.
-utils 폴더와 entities에는 순수함수만 넣어서 외부변수의 영향을 받지 않는 함수들로만 정리했습니다.
+utils 폴더와 entities에는 순수함수만 넣어서 외부변수의 영향을 받지 않는 함수들로만 정리했습니다.(특정 도메인에 속해있냐 전역적으로 쓸수있냐에 따라 나눔. 도메인에 속한 객체)
 features 폴더는 검색해보니 다른 함수들끼리 합쳐진? 예를들어,,, 그래서 필요없다고 생각해서 안만들었습니다.
 각 책임별로 나눠보니 다시한번 cart 폴더는 네가지 컴포넌트로 나눌수 있다는게 눈에 보이기 시작했습니다.
 cart-list, item-list, order-summary, using-coupon 네 가지로 나눌 수 있고 네 가지를 들어가보면 전부 하나의 UI만 책임지고 있다는 것이 보입니다.
@@ -110,9 +109,33 @@ cart-list, item-list, order-summary, using-coupon 네 가지로 나눌 수 있�
 
 useLocalStorage 훅 썼음. 수정은 복잡해서 저장/삭제 기능만 구현함.
 
-OCP 활용을 위해 FieldValidator 개념 추가
+OCP 활용을 위해 FieldValidator 개념 추가해봤습니다. OCP란 Open & Closed Principal 이라는 건데 
+확장엔 오픈, 수정엔 닫혀있다는 뜻으로 수정할 땐 다 고치는게 아니라 딱 그 개념만 수정하고, 확장은 여러곳에서 가능한.
 
-유틸함수로 checkCurrency 사용
+    const fieldValidator: Record<keyof Product, FieldValidator> = {
+        price: (value) => typeof value === 'number' && value % 100 === 0,
+        stock: (_) => true,
+        name: (_) => true,
+        discounts: (_) => true,
+        id: (_) => true,
+    }
+
+    OCP를 충족하기 위해 전략패턴을 사용하고자 했습니다. 전략패턴이란 행동을 추상화하고 여러 구현을 교체/수정 가능하게끔 만드는 건데요.
+    stock에 대한 전략을 현재는 true만 나오도록 되어있지만 언제든 '전략' 추상화와 교체가 가능합니다.
+
+제가 직접 만든 fieldValidator를 예시로 보면 수정할때는 fieldValidator의 속성 하나만 추가/수정 해준다면 
+handleAllEdit 함수의 수정없이 적용이 가능합니다.
+
+    const handleAllEdit = (field: keyof Product, value: string | number) => {
+        const validator = fieldValidator[field];
+        if(!validator(value)) {
+            alert(fieldErrorMessages[field]);
+            return;
+        }
+
+이렇게 전략패턴을 사용하면 수정 / 추가가 매우 간단하다는 생각이 들었고 무엇보다도 테스트 용이성이 매우매우매우 올라갑니다.
+이유는 수정이 필요한 부분이 딱 한 곳이기 때문에 다른 코드의 영향을 고려하지 않아도 되기 때문입니다. (다시 한번 크게 깨닫고 갑니다)
+하지만 단점으로는 처음 OCP와 전략패턴의 맛을 본 저로썬 처음 설계할때 시간이 꽤 들것 같습니다 ㅎㅎ 그럼에도 불구하고 계쏙 시도해볼 생각입니다.
 
 
 파일이름

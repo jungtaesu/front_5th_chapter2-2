@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Discount, Product } from "../../../../../types";
 import { FieldValidator } from "../../../../../types";
+import { checkCurrency } from "../../../../utils/checkCurrency";
 
 type Props = {
     products: Product[];
@@ -13,7 +14,7 @@ export const useProductList = ({ products, onProductUpdate }: Props) => {
     const [newDiscount, setNewDiscount] = useState<Discount>({ quantity: 0, rate: 0 });
 
     const fieldValidator: Record<keyof Product, FieldValidator> = {
-        price: (value) => typeof value === 'number' && value % 100 === 0,
+        price: (value) => typeof value === 'number' && checkCurrency(value),
         stock: (_) => true,
         name: (_) => true,
         discounts: (_) => true,
@@ -46,7 +47,7 @@ export const useProductList = ({ products, onProductUpdate }: Props) => {
     };
 
     const handleAllEdit = (field: keyof Product, value: string | number) => {
-
+        console.log("수정할 필드:", field);
         const validator = fieldValidator[field];
         //개쩌넹
         if(!validator(value)) {

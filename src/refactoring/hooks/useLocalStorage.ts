@@ -9,6 +9,7 @@ export const useLocalStorage = () => {
 
     const setValue = (value: CartItem[]) => {
         localStorage.setItem("cart", JSON.stringify(value));
+        setLocalCart(value)
     }
 
     const removeValue = () => {

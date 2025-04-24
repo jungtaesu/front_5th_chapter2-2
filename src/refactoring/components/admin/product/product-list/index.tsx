@@ -46,8 +46,9 @@ const ProductList = ({ onProductUpdate, products }:Props) => {
                                     />
                                 </div>
                                 <div className="mb-4">
-                                    <label className="block mb-1">가격: </label>
+                                    <label htmlFor="price-input" className="block mb-1">가격: </label>
                                     <input
+                                        id="price-input"
                                         type="number"
                                         value={editingProduct.price}
                                         onChange={(e) => handleAllEdit('price', parseInt(e.target.value))}
